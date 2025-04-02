@@ -61,8 +61,6 @@ A modern iOS application that implements a hierarchical content display system w
   
 #### Utils
 - `DesignSystem`: Centralized design constants and styling
-- 
-- **Protocols Interface definitions for dependency injection
 
 ## Requirements
 
