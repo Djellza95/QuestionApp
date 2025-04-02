@@ -35,7 +35,7 @@ A modern iOS application that implements a hierarchical content display system w
 - Protocol-oriented design
 - Clean separation of concerns
 
-  ### Dependency Injection (DI)
+### Dependency Injection (DI)
 - The app uses **Dependency Injection** to enhance modularity, testability, and separation of concerns.
 - Services like `NetworkManager` and `StorageService` are injected into view models via protocols.
 
