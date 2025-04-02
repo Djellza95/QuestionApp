@@ -225,19 +225,17 @@ class QuestionCell: UITableViewCell {
             typeImageView.tintColor = DesignSystem.Color.titleColorFor(itemType: itemType, nestingLevel: nestingLevel)
             typeImageView.alpha = 1
         } else {
-            typeImageView.isHidden = false // Keep it visible but transparent
+            typeImageView.isHidden = false
             typeImageView.image = nil
-            typeImageView.alpha = 0 // Make it transparent instead of hiding
+            typeImageView.alpha = 0
         }
         
-        // Remove the spacing adjustment since we're maintaining consistent layout
         if let headerStack = typeImageView.superview as? UIStackView {
-            headerStack.spacing = 12 // Maintain consistent spacing
+            headerStack.spacing = 12
         }
     }
     
     private func configureSubtitleLabel(nestingLevel: Int) {
-        // Configure subtitle font based on type
         switch currentItemType {
         case .page:
             subtitleLabel.font = DesignSystem.Font.pageSubtitle
@@ -249,7 +247,7 @@ class QuestionCell: UITableViewCell {
         
         subtitleLabel.textColor = DesignSystem.Color.subtitleColorFor(itemType: currentItemType, nestingLevel: nestingLevel)
         subtitleLabel.text = currentItemType.iconConfiguration?.subtitle
-        subtitleLabel.isHidden = false // Ensure subtitle is always visible
+        subtitleLabel.isHidden = false
     }
     
     private func configureExpandButton(isHidden: Bool, isExpanded: Bool, nestingLevel: Int) {
@@ -260,11 +258,9 @@ class QuestionCell: UITableViewCell {
             expandButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
             expandButton.tintColor = DesignSystem.Color.titleColorFor(itemType: currentItemType, nestingLevel: nestingLevel)
             
-            // Ensure the button is properly sized and positioned
             expandButton.contentMode = .center
             expandButton.imageView?.contentMode = .scaleAspectFit
             
-            // Set the initial transform without animation if needed
             if expandButton.transform == .identity && isExpanded {
                 expandButton.transform = CGAffineTransform(rotationAngle: .pi)
             } else if expandButton.transform != .identity && !isExpanded {
