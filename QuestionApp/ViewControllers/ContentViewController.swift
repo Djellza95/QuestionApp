@@ -10,12 +10,12 @@ import Alamofire
 class ContentViewController: UIViewController {
     
     // MARK: - Properties
-    private let viewModel = ContentViewModel()
+    private let viewModel: ContentViewModel
     private let tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .white
         table.separatorStyle = .none
-        table.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        table.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         return table
     }()
     
@@ -51,6 +51,16 @@ class ContentViewController: UIViewController {
     
     deinit {
         updateTimer?.invalidate()
+    }
+    
+    // MARK: - Initialization
+    init(viewModel: ContentViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Lifecycle
@@ -115,7 +125,7 @@ class ContentViewController: UIViewController {
         networkStatusLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),

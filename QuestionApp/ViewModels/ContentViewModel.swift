@@ -41,12 +41,18 @@ class ContentViewModel {
     // MARK: - Properties
     private(set) var items: [Item] = []
     var onStateChange: ((State) -> Void)?
-    private let storageService = StorageService.shared
-    
+    private let networkService: NetworkServiceProtocol
+    private let storageService: StorageServiceProtocol
     private let networkTimeout: TimeInterval = 10.0 // 10 seconds timeout
     private var isRetrying = false
     private var retryCount = 0
     private let maxRetries = 3
+    
+    // MARK: - Initialization
+    init(networkService: NetworkServiceProtocol, storageService: StorageServiceProtocol) {
+        self.networkService = networkService
+        self.storageService = storageService
+    }
     
     // MARK: - Public Methods
     func fetchContent(forceRefresh: Bool = false) {
@@ -63,25 +69,18 @@ class ContentViewModel {
         
         onStateChange?(.loading)
         
-        let url = "https://run.mocky.io/v3/bf930934-5583-46ad-827d-0574d8f5a2e6"
-        
-        let request = AF.request(url, requestModifier: { $0.timeoutInterval = self.networkTimeout })
-        
-        request.responseDecodable(of: Item.self) { [weak self] response in
-            guard let self = self else { return }
-            
-            switch response.result {
-            case .success(let content):
+        Task {
+            do {
+                let content = try await networkService.fetchContent()
                 self.items = content.items ?? []
                 self.isRetrying = false
                 self.retryCount = 0
                 // Save content for offline use
                 try? self.storageService.saveContent(content)
                 self.onStateChange?(.loaded)
-                
-            case .failure(let error):
+            } catch {
                 // Handle different types of network failures
-                if let underlyingError = error.underlyingError as NSError? {
+                if let underlyingError = error as NSError? {
                     switch underlyingError.code {
                     case NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost, NSURLErrorNotConnectedToInternet:
                         // Connection issues - try to retry

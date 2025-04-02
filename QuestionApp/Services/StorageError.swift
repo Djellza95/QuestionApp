@@ -14,26 +14,32 @@ enum StorageError: Error {
     case noDataAvailable
 }
 
-class StorageService {
-    static let shared = StorageService()
-    private let contentKey = "cached_content"
-    private let lastUpdateKey = "last_update_timestamp"
+class StorageService: StorageServiceProtocol {
+    private let contentKey: String
+    private let lastUpdateKey: String
+    private let userDefaults: UserDefaults
     
-    private init() {}
+    init(contentKey: String = "cached_content",
+         lastUpdateKey: String = "last_update_timestamp",
+         userDefaults: UserDefaults = .standard) {
+        self.contentKey = contentKey
+        self.lastUpdateKey = lastUpdateKey
+        self.userDefaults = userDefaults
+    }
     
     func saveContent(_ content: Item) throws {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(content)
-            UserDefaults.standard.set(data, forKey: contentKey)
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: lastUpdateKey)
+            userDefaults.set(data, forKey: contentKey)
+            userDefaults.set(Date().timeIntervalSince1970, forKey: lastUpdateKey)
         } catch {
             throw StorageError.saveFailed
         }
     }
     
     func loadContent() throws -> Item {
-        guard let data = UserDefaults.standard.data(forKey: contentKey) else {
+        guard let data = userDefaults.data(forKey: contentKey) else {
             throw StorageError.noDataAvailable
         }
         
@@ -46,12 +52,12 @@ class StorageService {
     }
     
     func getLastUpdateTimestamp() -> Date? {
-        let timestamp = UserDefaults.standard.double(forKey: lastUpdateKey)
+        let timestamp = userDefaults.double(forKey: lastUpdateKey)
         return timestamp > 0 ? Date(timeIntervalSince1970: timestamp) : nil
     }
     
     func clearCache() {
-        UserDefaults.standard.removeObject(forKey: contentKey)
-        UserDefaults.standard.removeObject(forKey: lastUpdateKey)
+        userDefaults.removeObject(forKey: contentKey)
+        userDefaults.removeObject(forKey: lastUpdateKey)
     }
 } 
