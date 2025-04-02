@@ -361,13 +361,17 @@ extension ContentViewController: QuestionCellDelegate {
             guard let self = self else { return }
             if let indexPath = self.tableView.indexPath(for: cell) {
                 cell.configure(with: item,
-                             nestingLevel: self.currentItems[indexPath.row].level,
-                             isExpanded: self.isExpanded(item))
+                               nestingLevel: self.currentItems[indexPath.row].level,
+                               isExpanded: self.isExpanded(item))
             }
         }
     }
     
     func questionCell(_ cell: QuestionCell, didTapImageAt imageFrame: CGRect) {
-        
+        if let imageCell = cell as? QuestionCell,
+           let image = imageCell.contentImageView.image {
+            let imageVC = ImageViewController(image: image, sourceImageView: imageCell.contentImageView, originalFrame: imageFrame)
+            present(imageVC, animated: false)
+        }
     }
 }
