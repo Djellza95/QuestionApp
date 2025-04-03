@@ -14,7 +14,7 @@ class NetworkManager {
     
     private init() {}
     
-    private let baseURL = "https://run.mocky.io/v3/bf930934-5583-46ad-827d-0574d8f5a2e6"
+    private let baseURL = "https://run.mocky.io/v3/610625ad-825b-40c6-a49a-85ce78cdcd73"
     
     func fetchContent() async throws -> Item {
         return try await withCheckedThrowingContinuation { continuation in
